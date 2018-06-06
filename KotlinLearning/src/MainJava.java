@@ -27,6 +27,7 @@ public class MainJava extends JFrame {
         game = new Game(COLS, ROWS, BOMBS);
         game.start();
         setImages();
+        initLable();
         initPanel();
         initFrame();
     }
@@ -35,7 +36,6 @@ public class MainJava extends JFrame {
         label = new JLabel("Welcome!");
         add(label, BorderLayout.SOUTH);
     }
-
 
     private void initPanel () {
         panel = new JPanel() {
@@ -55,9 +55,9 @@ public class MainJava extends JFrame {
                 int y = e.getY() / IMAGE_SIZE;
                 Coord coord = new Coord(x, y);
                 if (e.getButton() == MouseEvent.BUTTON1)
-                    game.presseLeftButton(coord);
+                    game.pressLeftButton(coord);
                 if (e.getButton() == MouseEvent.BUTTON3)
-                    game.presseRightButton(coord);
+                    game.pressRightButton(coord);
                 if (e.getButton() == MouseEvent.BUTTON2)
                     game.start();
                 label.setText(getMessage());
@@ -76,7 +76,7 @@ public class MainJava extends JFrame {
             case PLAYED: return "HEY! YOU'R ALIVE! BUT WHAT IS YOUR DESTINY???";
             case BOMBED: return "YOU LOSE! DA TING GO SKRAAA PA PA PA KA";
             case WINNER: return "CONGRATULATIONS";
-            default: return "NOTHING";
+            default:     return "NOTHING";
         }
     }
 
