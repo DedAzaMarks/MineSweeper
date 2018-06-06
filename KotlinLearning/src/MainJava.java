@@ -1,5 +1,8 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
 import sweeper.Box;
 import sweeper.Coord;
 import sweeper.Game;
@@ -9,6 +12,8 @@ public class MainJava extends JFrame {
     private Game game;
 
     private JPanel panel;
+    private JLabel label;
+
     private final int COLS = 9;
     private final int ROWS = 9;
     private final int BOMBS = 10;
@@ -26,6 +31,12 @@ public class MainJava extends JFrame {
         initFrame();
     }
 
+    private void initLable () {
+        label = new JLabel("Welcome!");
+        add(label, BorderLayout.SOUTH);
+    }
+
+
     private void initPanel () {
         panel = new JPanel() {
             @Override
@@ -36,19 +47,47 @@ public class MainJava extends JFrame {
                             coord.x * IMAGE_SIZE, coord.y * IMAGE_SIZE, this);
             }
         };
+
+        panel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent e) {
+                int x = e.getX() / IMAGE_SIZE;
+                int y = e.getY() / IMAGE_SIZE;
+                Coord coord = new Coord(x, y);
+                if (e.getButton() == MouseEvent.BUTTON1)
+                    game.presseLeftButton(coord);
+                if (e.getButton() == MouseEvent.BUTTON3)
+                    game.presseRightButton(coord);
+                if (e.getButton() == MouseEvent.BUTTON2)
+                    game.start();
+                label.setText(getMessage());
+                panel.repaint();
+            }
+        });
+
         panel.setPreferredSize(new Dimension(
-                Ranges.getSize().x * IMAGE_SIZE, Ranges.getSize().y * IMAGE_SIZE));
+                Ranges.getSize().x * IMAGE_SIZE,
+                Ranges.getSize().y * IMAGE_SIZE));
         add (panel);
+    }
+
+    private String getMessage() {
+        switch (game.getState()) {
+            case PLAYED: return "HEY! YOU'R ALIVE! BUT WHAT IS YOUR DESTINY???";
+            case BOMBED: return "YOU LOSE! DA TING GO SKRAAA PA PA PA KA";
+            case WINNER: return "CONGRATULATIONS";
+            default: return "NOTHING";
+        }
     }
 
     private void initFrame () {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); //stops app after closing
         setTitle("Сапер");
-        setLocationRelativeTo(null);
         setResizable(false);
         setVisible(true);
-        setIconImage(getImage("icon"));
         pack(); //gives min possible size to have all elements
+        setLocationRelativeTo(null);
+        setIconImage(getImage("icon"));
     }
 
     private void setImages () {
