@@ -1,2 +1,2 @@
 # MineSweeper
-Java/Kotlin minsweeper
+Java minsweeper
